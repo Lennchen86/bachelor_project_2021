@@ -14,7 +14,15 @@ This project is organized in the following way. In total there are 21 users with
 
 where `main.py` holds everything we need to run the project. One thing to note is that, currently, the program reads one data set at a time, which, in other words, means that it takes the geographical location data from one single user. Let me explain the most relevant part within each of the other three files, next.
 ### The `fineGrainLocation.py` file 
-Inside this file, we have all functions that we need to create fine grain location representation from the given data set. 
+Inside this code file, we have all functions that we need to create fine grain location representation from the given data set. The most relevant functions are 
+
+| Function | Description |
+| --- | --- |
+| label_generator_words(keyword, label)| The parameters that this function require are the keyword that has been extracted from the location and a list to store the labels. This function can be changed if needed. At the moment, we decided to use the labels: Campus, Home, Leisure, Road, Market, Others. The return of the function is an updated label list.| 
+| label_generator_numbers(keyword, label) | The parameters that this function require are the keyword that has been extracted from the location with only a street name and a list to store the labels. Different keywords can be added manually to check and add it to require location labels. The return of the function is an updated label list.|
+| set_labels(multipleLoc, location_data) | The function looks through each locations and from each of them it creates the location labels from the keywords. It doesn't return anything.|
+| fine_grain_location(location_data)| From the `location_data`, it creates the 30 min. time intervals, fills in the gaps with 'N' when data were missing and looks for the highest occurred location label to set it as the most representative for the given time interval. The outcome is then stored in a dataframe, called `result` which is also the return variable of this function.|
+
 
 ### The `createLDA_featurevector.py` file 
 This file includes all functions that we performed for the LDA model (with an arbitary k value to set for k amount of topics) and the feature vector that happens afterwards. 
