@@ -6,7 +6,7 @@ warnings.filterwarnings("ignore", category=DeprecationWarning)
 
 def main():
     # This can be changed when we want to check other users
-    location_data = pd.read_csv("./Resources/Parsed_Data/user1.csv", parse_dates=['Timestamp'])
+    location_data = pd.read_csv("../Resources/Parsed_Data/user1.csv", parse_dates=['Timestamp'])
     multiple_Loc = fgl.parse_data(location_data)
     fgl.set_labels(multiple_Loc, location_data)
     fgl.convert_to_date(location_data)

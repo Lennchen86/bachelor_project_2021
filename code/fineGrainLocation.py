@@ -54,34 +54,32 @@ def word_extraction(location):
 
 
 # This is the function where labels are categorized, this can be changed if needed
-def label_generator_words(words, label):
+def label_generator_words(keyword, label):
     # determine which labels to use
-    if 'University' in words or 'School' in words:
+    if 'University' in keyword or 'School' in keyword or 'College' in keyword:
         label.append('Campus')
-    elif 'Arana' in words:
+    elif 'Arana' in keyword:
         label.append('Home')
-    elif 'College' in words:
-        label.append('Campus')
-    elif 'Street' in words or 'Road' in words or 'Motorway' in words:
+    elif 'Street' in keyword or 'Road' in keyword or 'Motorway' in keyword:
         label.append('Road')
-    elif 'Countdown' in words or 'Liquorland' in words or 'Supermarket' in words or 'Mall' in words or \
-            'Shop' in words:
+    elif 'Countdown' in keyword or 'Liquorland' in keyword or 'Supermarket' in keyword or 'Mall' in keyword or \
+            'Shop' in keyword:
         label.append('Market')
-    elif 'Stables' in words or 'Theatre' in words or 'Museum' in words or 'Club' in words or \
-            'Societies' in words or 'Cafe' in words:
+    elif 'Stables' in keyword or 'Theatre' in keyword or 'Museum' in keyword or 'Club' in keyword or \
+            'Societies' in keyword or 'Cafe' in keyword:
         label.append('Leisure')
     else:
         label.append('Others')
 
 
 # Some of the locations need to be specified manually, according to their frequency of occurrences
-def label_generator_numbers(ntmp, label):
-    if 'Hawthorn Avenue' in ntmp or 'Chapel Street' in ntmp or 'Clyde Street' in ntmp or 'Bay View Road' in ntmp or \
-            'Shand Street' in ntmp or 'Leith Street' in ntmp or 'Harrow Street' in ntmp:
+def label_generator_numbers(keyword, label):
+    if 'Hawthorn Avenue' in keyword or 'Chapel Street' in keyword or 'Clyde Street' in keyword or 'Bay View Road' in keyword or \
+            'Shand Street' in keyword or 'Leith Street' in keyword or 'Harrow Street' in keyword:
         label.append('Home')
-    elif 'Albany Street' in ntmp:
+    elif 'Albany Street' in keyword:
         label.append('Leisure')
-    elif 'Union Street' in ntmp:
+    elif 'Union Street' in keyword:
         label.append('Campus')
     else:
         label.append('Others')
@@ -99,29 +97,11 @@ def make_histogram(list, xlabel, ylabel, title, direction):
     plt.show()
 
 
-def set_labels(multiple_Loc, location_data):
-    combi = combine_locations(multiple_Loc)
-    tokenized_list = tokenize(combi)
-    labels = []
-    list = []
-    # For each row inside the 'Location" column
-    for l in tokenized_list:
-        # Consider everything what is before the first comma
-        tmp = l.pop(0)
-        words = re.sub("[^\w]", " ", tmp).split()
-        # Consider digits first
-        if words[0][0].isdigit():
-            ntmp = l.pop(0)
-            list.append(ntmp + " " + tmp)
-            label_generator_numbers(ntmp, labels)
-        else:
-            label_generator_words(words, labels)
-
-    # Retrieve most common 10 from Locations starting with numbers
+def retrieve_10_locations_with_numbers(list, labels, location_data):
     count_numlist = Counter(list)
     most_count_numlist = count_numlist.most_common(10)
     make_histogram(most_count_numlist, "Location as Numbers", "Occurrences", "Locations that start with numbers",
-                  'vertical')
+                   'vertical')
 
     # Here I made a horizontal bar plot
     location = []
@@ -146,6 +126,28 @@ def set_labels(multiple_Loc, location_data):
     df.to_csv('count_Occ.csv', index=False)
     # Make a histogram from the six most occurred locations
     make_histogram(mostOcc, "Locations", "Occurrences", "The 6 most occurred occurrences", 'horizontal')
+
+
+def set_labels(multiple_Loc, location_data):
+    list = []
+    combi = combine_locations(multiple_Loc)
+    tokenized_list = tokenize(combi)
+    labels = []
+    # For each row inside the 'Location" column
+    for l in tokenized_list:
+        # Consider everything what is before the first comma
+        keyword = l.pop(0)
+        words = re.sub("[^\w]", " ", keyword).split()
+        # Consider digits first
+        if words[0][0].isdigit():
+            number = l.pop(0)
+            list.append(number + " " + keyword)
+            label_generator_numbers(number, labels)
+        else:
+            label_generator_words(words, labels)
+
+    # Retrieve most common 10 from Locations starting with numbers
+    retrieve_10_locations_with_numbers(list,labels, location_data)
 
 
 # Here I define the frequencies
