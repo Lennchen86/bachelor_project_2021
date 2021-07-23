@@ -153,7 +153,7 @@ def getonedayfeaturevector(document, df1):
                 if document[doc_idx] == topic[topic_idx][0]:
                     # Add it to the variable feature_value_for_a day
                     feature_value_for_a_day += topic[topic_idx][1]
-        features.append(feature_value_for_a_day)
+        features.append(round(feature_value_for_a_day,3))
         feature_value_for_a_day = 0
     return features
 
@@ -170,8 +170,8 @@ def getfeaturevector(list_of_docs, lda_model):
     pd.DataFrame(df1).to_csv('topic_model_show_outcome.csv', index=False)
     featureVec = [getonedayfeaturevector(d, df1) for d in list_of_docs]
     # Save it to a file
-    for idx in range(len(featureVec)):
-        feature_df = feature_df.append({'Day': idx, 'Features': featureVec[idx]}, ignore_index=True)
+    feature_df['Day'] = range(len(featureVec))
+    feature_df['Features'] = featureVec
     df2 = feature_df.Features.apply(pd.Series)
     # This is the dataframe where the feature vector is stored in a list
     pd.DataFrame(feature_df).to_csv('feature_vectors.csv', index=False)
@@ -199,7 +199,7 @@ def modeling(list_of_docs):
     all_topics = lda_model.get_document_topics(corpus)
     all_topics_csr = gensim.matutils.corpus2csc(all_topics)
     all_topics_numpy = all_topics_csr.T.toarray()
-    major_topic = [np.argmax(arr) for arr in all_topics_numpy]
+    major_topic = [np.max(arr) for arr in all_topics_numpy]
     # To obtain the feature vector for future use
     feature_vector, featurevec_df = getfeaturevector(texts, lda_model)
     featurevec_df['major_lda_topic'] = major_topic

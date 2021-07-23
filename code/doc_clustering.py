@@ -32,9 +32,9 @@ def create_3d_plot(title, res, index, label1, label2):
 def analyse(col_name, df):
     size_of_each_cluster = df.groupby(col_name).size().reset_index()
     size_of_each_cluster.columns = [col_name, 'number_of_points']
-    size_of_each_cluster['percentage'] = (size_of_each_cluster['number_of_points'] / np.sum(
+    size_of_each_cluster['percentage'] = (size_of_each_cluster['number_of_points'] / sum(
         size_of_each_cluster['number_of_points'])) * 100
-    print(size_of_each_cluster)
+    # print(size_of_each_cluster)
 
 
 def isolationforest(feature_vector, df, res):
