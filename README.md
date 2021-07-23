@@ -14,18 +14,32 @@ This project is organized in the following way. In total there are 21 users with
 
 where `main.py` holds everything we need to run the project. One thing to note is that, currently, the program reads one data set at a time, which, in other words, means that it takes the geographical location data from one single user. Let me explain the most relevant part within each of the other three files, next.
 ### The `fineGrainLocation.py` file 
-Inside this file, we have all functions that we need to create fine grain location representation from the given data set. 
+Inside this code file, we have all functions that we need to create fine grain location representation from the given data set. The most relevant functions are 
+
+| Function | Description |
+| --- | --- |
+| `label_generator_words(keyword, label)`| The parameters that this function require are the keyword that has been extracted from the location and a list to store the labels. This function can be changed if needed. At the moment, we decided to use the labels: Campus, Home, Leisure, Road, Market, Others. The return of the function is an updated label list.| 
+| `label_generator_numbers(keyword, label)` | The parameters that this function require are the keyword that has been extracted from the location with only a street name and a list to store the labels. Different keywords can be added manually to check and add it to require location labels. The return of the function is an updated label list.|
+| `set_labels(multipleLoc, location_data)` | The function looks through each locations and from each of them it creates the location labels from the keywords. It doesn't return anything.|
+| `fine_grain_location(location_data)`| From the `location_data`, it creates the 30 min. time intervals, fills in the gaps with 'N' when data were missing and looks for the highest occurred location label to set it as the most representative for the given time interval. The outcome is then stored in a dataframe, called `result` which is also the return variable of this function.|
+
 
 ### The `createLDA_featurevector.py` file 
-This file includes all functions that we performed for the LDA model (with an arbitary k value to set for k amount of topics) and the feature vector that happens afterwards. 
+This file includes all functions that we performed for the LDA model (with an arbitary k value to set for k amount of topics) and the feature vector that happens afterwards. The important functions are 
+
+| Function | Description |
+| --- | --- |
+| `makeDocuments(list)`| This function is used to create the documents needed for the LDA model. It takes in the list of day descriptors and outputs a list of documents.| 
+| ` modeling(list_of_docs)` | The function is there to perform the LDA model and creating the feature vector on our dataset. This is done by feeding the results that we obtained from `makeDocuments(list)` function and outputs the list of the feature vector and its dataframe.|
+
 
 ### The `doc_clustering.py` file 
-Here, we have three main functions for the three document clustering that we performed. The three methods are Isolation Forest, Agglomerative Clustering and Gaussian Mixture Model. 
+Here, we have three main functions for the three document clustering that we performed. The three methods are Isolation Forest, Agglomerative Clustering and Gaussian Mixture Model. For all of them, we fed them with the dataframes created by the feature vector and the outcome from the LDA model to perform each of the methods. However, to draw a plot to show how the outcome of the clustering methods look like, we used PCA to lower the dimensions of our metrices. 
 
 ## 2. Dependencies and Installation 
-At this page, we have put the lists of dependencies and install instructions for people who wants to explore and work on this project for your use. 
+In this section, we have put the lists of dependencies and install instructions for people who wants to explore and work on this project for your personal or academical use. 
 ### Dependencies 
-To load this project, the following packages have to be installed:
+To load this project, the following packages have to be installed first:
 - numpy 
 - pandas 
 - re
